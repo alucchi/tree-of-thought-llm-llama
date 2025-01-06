@@ -267,14 +267,52 @@ Input:
 '''
 
 
-propose_prompt = '''Let's play a 5 x 5 mini crossword, where each word should have exactly 5 letters.
-
-{input}
-
-Given the current status, list all possible answers for unfilled or changed words, and your confidence levels (certain/high/medium/low), using the format "h1. apple (medium)". Use "certain" cautiously and only when you are 100% sure this is the correct word. You can list more then one possible answer for each word.
+propose_prompt_old = '''Let's play a 5 x 5 mini crossword, where each word should have exactly 5 letters.                                                                                                                      
+                                                                                                                                                                                                                           
+{input}                                                                                                                                                                                                                    
+                                                                                                                                                                                                                           
+Given the current status, list all possible answers for unfilled or changed words, and your confidence levels (certain/high/medium/low), using the format "h1. apple (medium)". Use "certain" cautiously and only when you\
+ are 100% sure this is the correct word. You can list more then one possible answer for each word.                                                                                                                         
 '''
 
 
+propose_prompt_new_2 = '''Let's play a 5 x 5 mini crossword, where each word should have exactly 5 letters.
+
+{input}
+
+Given the current status, list all possible answers for unfilled or changed words, and your confidence levels (certain/high/medium/low), using exactly the format "hi. WORD (confident)", where i is a number from 1 to 5, WORD is a 5-letter word, and confident is certain, high, or medium. Here is an example: "h1. apple (medium)". Do not use another format. Use "certain" cautiously and only when you are 100% sure this is the correct word. You can list more then one possible answer for each word.
+'''
+
+
+propose_prompt = '''Given the current board state, output only the possible 5-letter words for each unfilled or changed word, along with the confidence level (certain/high/medium). Follow this format exactly:
+hX. WORD (confidence)
+where:
+- X is a number from 1 to 5.
+- WORD must be exactly 5 letters.
+- confidence is one of: certain, high, or medium.
+- Use "certain" sparingly and only if the word is definitely correct.
+- Avoid repeating words and only list unique answers.
+- Do not provide any explanations, descriptions, or extra information.
+
+Let's play a 5 x 5 mini crossword, where each word should have exactly 5 letters.
+
+{input}
+
+Given the current board state, output only the possible 5-letter words for each unfilled or changed word, along with the confidence level (certain/high/medium). Follow this format exactly:
+hX. WORD (confidence)
+where:
+- X is a number from 1 to 5.
+- WORD must be exactly 5 letters.
+- confidence is one of: certain, high, or medium.
+- Use "certain" sparingly and only if the word is definitely correct.
+- Avoid repeating words and only list unique answers.
+- Do not provide any explanations, descriptions, or extra information.
+'''
+
+
+
+
+# system_prompt
 value_prompt = '''Evaluate if there exists a five letter word of some meaning that fit some letter constraints (sure/maybe/impossible).
 
 Incorrect; to injure: w _ o _ g
@@ -321,6 +359,4 @@ Some possible words that mean "Chance; a parasitic worm; a fish":
 fluke (f l u k e): 5 letters, letter 1 is f, not w
 I cannot think of any words now. 4 letters are constrained, and it is extremely unlikely to have a word with pattern w r a k _ to mean "Chance; a parasitic worm; a fish"
 impossible
-
-{input}
 '''
